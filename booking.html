@@ -124,6 +124,14 @@
             </select>
         </div>
         <div class="mb-3">
+            <label for="duration" class="form-label">Select Duration</label>
+            <select class="form-select" id="duration" required>
+                <option value="1 hour">1 Hour</option>
+                <option value="2 hours">2 Hours</option>
+                <option value="3 hours">3 Hours</option>
+            </select>
+        </div>
+        <div class="mb-3">
             <label for="date" class="form-label">Preferred Date</label>
             <input type="date" class="form-control" id="date" required>
         </div>
@@ -160,9 +168,10 @@
         var service = document.getElementById("service").value;
         var date = document.getElementById("date").value;
         var phoneNumber = document.getElementById("phone number").value;
+        var duration = document.getElementById("duration").value;
 
         // Validate inputs
-        if (name.trim() === "" || email.trim() === "" || phoneNumber.trim() === "" || service.trim() === "" || date.trim() === "") {
+        if (name.trim() === "" || email.trim() === "" || phoneNumber.trim() === "" || duration.trim() === "" || service.trim() === "" || date.trim() === "") {
             alert("Please fill in all fields.");
             return;
         }
@@ -173,6 +182,7 @@
             "<p><strong>Email:</strong> " + email + "</p>" +
             "<p><strong>Email:</strong> " + phoneNumber + "</p>" +
             "<p><strong>Service:</strong> " + service + "</p>" +
+            "<p><strong>Duration:</strong> " + duration + "</p>" +
             "<p><strong>Preferred Date:</strong> " + date + "</p>";
 
         // Show modal
@@ -192,7 +202,7 @@
             </div>
             <div class="col-md-4 footer-info">
                 <h5>Contact Information</h5>
-                <p>Phone: +123456789</p>
+                <p>Phone: +1234567890</p>
                 <p>Email: immigrationInfo@example.com</p>
                 <p>Address: 123 Maple Street, ottawa,Ontario, Canada, K1A, 5B2</p>
                 <hr>
@@ -208,7 +218,7 @@
                 <h5>Quick Links</h5>
                 <ul class="list-unstyled">
                     <li><a href="./homePage.html#services">Services</a></li>
-                    <li><a href="./homePage.html#contact">Contact</a></li>
+                    
                 </ul>
             </div>
         </div>
