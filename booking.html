@@ -112,8 +112,8 @@
             <input type="email" class="form-control" id="email" required>
         </div>
         <div class="mb-3">
-            <label for="phone number" class="form-label">phone number</label>
-            <input type="text" class="form-control" id="phone number" required>
+            <label for="phone-number" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="phone-number" required>
         </div>
         <div class="mb-3">
             <label for="service" class="form-label">Select Service</label>
@@ -135,7 +135,39 @@
             <label for="date" class="form-label">Preferred Date</label>
             <input type="date" class="form-control" id="date" required>
         </div>
-        <button type="button" class="btn btn-primary" onclick="submitBooking()">Submit</button>
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" value="" id="multiplePersonsCheck">
+            <label class="form-check-label" for="multiplePersonsCheck">
+                Booking for multiple persons
+            </label>
+        </div>
+        <div id="additionalPersons" style="display: none;">
+            <h5>Additional Persons</h5>
+            <div class="additional-person mb-3">
+                <label for="additionalName1" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="additionalName1">
+                <label for="additionalEmail1" class="form-label mt-2">Email Address</label>
+                <input type="email" class="form-control" id="additionalEmail1">
+                <label for="additionalPhoneNumber1" class="form-label mt-2">Phone Number</label>
+                <input type="text" class="form-control" id="additionalPhoneNumber1">
+                <label for="additionalService1" class="form-label mt-2">Select Service</label>
+                <select class="form-select" id="additionalService1">
+                    <option value="visa application">Visa Consultation</option>
+                    <option value="permanent residency application">Permanent Residency</option>
+                    <option value="citizenship application">Citizenship Application</option>
+                </select>
+                <label for="additionalDuration1" class="form-label mt-2">Select Duration</label>
+                <select class="form-select" id="additionalDuration1">
+                    <option value="1 hour">1 Hour</option>
+                    <option value="2 hours">2 Hours</option>
+                    <option value="3 hours">3 Hours</option>
+                </select>
+                <label for="additionalDate1" class="form-label mt-2">Preferred Date</label>
+                <input type="date" class="form-control" id="additionalDate1">
+            </div>
+            <button type="button" class="btn btn-secondary" id="addPersonBtn">Add Another Person</button>
+        </div>
+        <button type="button" class="btn btn-primary mt-3" onclick="submitBooking()">Submit</button>
     </form>
 </div>
 
@@ -161,14 +193,51 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+    document.getElementById('multiplePersonsCheck').addEventListener('change', function() {
+        var additionalPersonsDiv = document.getElementById('additionalPersons');
+        additionalPersonsDiv.style.display = this.checked ? 'block' : 'none';
+    });
+
+    var personCount = 1;
+
+    document.getElementById('addPersonBtn').addEventListener('click', function() {
+        personCount++;
+        var additionalPersonsDiv = document.getElementById('additionalPersons');
+        var newPersonDiv = document.createElement('div');
+        newPersonDiv.classList.add('additional-person', 'mb-3');
+        newPersonDiv.innerHTML = `
+            <label for="additionalName${personCount}" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="additionalName${personCount}">
+            <label for="additionalEmail${personCount}" class="form-label mt-2">Email Address</label>
+            <input type="email" class="form-control" id="additionalEmail${personCount}">
+            <label for="additionalPhoneNumber${personCount}" class="form-label mt-2">Phone Number</label>
+            <input type="text" class="form-control" id="additionalPhoneNumber${personCount}">
+            <label for="additionalService${personCount}" class="form-label mt-2">Select Service</label>
+            <select class="form-select" id="additionalService${personCount}">
+                <option value="visa application">Visa Consultation</option>
+                <option value="permanent residency application">Permanent Residency</option>
+                <option value="citizenship application">Citizenship Application</option>
+            </select>
+            <label for="additionalDuration${personCount}" class="form-label mt-2">Select Duration</label>
+            <select class="form-select" id="additionalDuration${personCount}">
+                <option value="1 hour">1 Hour</option>
+                <option value="2 hours">2 Hours</option>
+                <option value="3 hours">3 Hours</option>
+            </select>
+            <label for="additionalDate${personCount}" class="form-label mt-2">Preferred Date</label>
+            <input type="date" class="form-control" id="additionalDate${personCount}">
+        `;
+        additionalPersonsDiv.insertBefore(newPersonDiv, document.getElementById('addPersonBtn'));
+    });
+
     function submitBooking() {
         // Get user input values
         var name = document.getElementById("name").value;
         var email = document.getElementById("email").value;
+        var phoneNumber = document.getElementById("phone-number").value;
         var service = document.getElementById("service").value;
-        var date = document.getElementById("date").value;
-        var phoneNumber = document.getElementById("phone number").value;
         var duration = document.getElementById("duration").value;
+        var date = document.getElementById("date").value;
 
         // Validate inputs
         if (name.trim() === "" || email.trim() === "" || phoneNumber.trim() === "" || duration.trim() === "" || service.trim() === "" || date.trim() === "") {
@@ -176,14 +245,38 @@
             return;
         }
 
-        // Display booking details in modal
-        var modalBody = document.getElementById("bookingDetails");
-        modalBody.innerHTML = "<p><strong>Name:</strong> " + name + "</p>" +
+        var bookingDetails = "<p><strong>Name:</strong> " + name + "</p>" +
             "<p><strong>Email:</strong> " + email + "</p>" +
-            "<p><strong>Email:</strong> " + phoneNumber + "</p>" +
+            "<p><strong>Phone Number:</strong> " + phoneNumber + "</p>" +
             "<p><strong>Service:</strong> " + service + "</p>" +
             "<p><strong>Duration:</strong> " + duration + "</p>" +
             "<p><strong>Preferred Date:</strong> " + date + "</p>";
+
+        // Check if multiple persons booking
+        if (document.getElementById('multiplePersonsCheck').checked) {
+            bookingDetails += "<h5>Additional Persons:</h5>";
+            for (var i = 1; i <= personCount; i++) {
+                var additionalName = document.getElementById('additionalName' + i).value;
+                var additionalEmail = document.getElementById('additionalEmail' + i).value;
+                var additionalPhoneNumber = document.getElementById('additionalPhoneNumber' + i).value;
+                var additionalService = document.getElementById('additionalService' + i).value;
+                var additionalDuration = document.getElementById('additionalDuration' + i).value;
+                var additionalDate = document.getElementById('additionalDate' + i).value;
+
+                if (additionalName.trim() !== "" || additionalEmail.trim() !== "" || additionalPhoneNumber.trim() !== "") {
+                    bookingDetails += "<p><strong>Name:</strong> " + additionalName + "</p>" +
+                        "<p><strong>Email:</strong> " + additionalEmail + "</p>" +
+                        "<p><strong>Phone Number:</strong> " + additionalPhoneNumber + "</p>" +
+                        "<p><strong>Service:</strong> " + additionalService + "</p>" +
+                        "<p><strong>Duration:</strong> " + additionalDuration + "</p>" +
+                        "<p><strong>Preferred Date:</strong> " + additionalDate + "</p>";
+                }
+            }
+        }
+
+        // Display booking details in modal
+        var modalBody = document.getElementById("bookingDetails");
+        modalBody.innerHTML = bookingDetails;
 
         // Show modal
         var modal = new bootstrap.Modal(document.getElementById('bookingSuccessModal'), {});
